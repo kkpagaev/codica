@@ -3,8 +3,10 @@ import { ConfigModule } from "@nestjs/config"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { BankModule } from "./bank/bank.module"
 import { Bank } from "./bank/entities/bank.entity"
+import { Transaction } from "./transaction/entities/transaction.entity"
+import { TransactionModule } from "./transaction/transaction.module"
 
-const entities = [Bank]
+const entities = [Bank, Transaction]
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -19,6 +21,7 @@ const entities = [Bank]
       entities: entities,
     }),
     BankModule,
+    TransactionModule,
   ],
 })
 export class AppModule {}
