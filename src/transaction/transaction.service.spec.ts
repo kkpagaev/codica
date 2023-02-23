@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
+import { BankService } from "../bank/bank.service"
 import { Transaction } from "./entities/transaction.entity"
 import { TransactionService } from "./transaction.service"
 
@@ -17,6 +18,12 @@ describe("TransactionService", () => {
         {
           provide: getRepositoryToken(Transaction),
           useValue: mockTransactionRepository(),
+        },
+        {
+          provide: BankService,
+          useValue: {
+            processTransaction: jest.fn(),
+          },
         },
       ],
     }).compile()

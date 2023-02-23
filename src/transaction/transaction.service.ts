@@ -1,13 +1,16 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
+import { BankService } from "../bank/bank.service"
+import { CreateTransactionDto } from "./dto/create-transaction.dto"
 import { Transaction } from "./entities/transaction.entity"
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
-    private transactionRepository: Repository<Transaction>
+    private transactionRepository: Repository<Transaction>,
+    private bankService: BankService
   ) {}
 
   async paginate(page: number, limit: number) {
@@ -26,9 +29,13 @@ export class TransactionService {
     }
   }
 
-  async create(transaction: Transaction) {
-    const result = await this.transactionRepository.save(transaction)
-    return result
+  async create({ amount, type, bankId }: CreateTransactionDto) {
+    const transaction = new Transaction()
+    transaction.amount = amount
+    transaction.type = type
+    transaction.bankId = bankId
+
+    await this.bankService.processTransaction(transaction)
   }
 
   async delete(id: string) {

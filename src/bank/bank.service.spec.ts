@@ -1,8 +1,20 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
+import { DataSource } from "typeorm"
 import { BankService } from "./bank.service"
 import { Bank } from "./entities/bank.entity"
 
+export const dataSourceMockFactory: () => MockType<DataSource> = jest.fn(
+  () => ({
+    transaction: jest.fn(),
+  })
+)
+
+export type MockType<T> = {
+  [P in keyof T]?: jest.Mock<{
+    [key: string]: any
+  }>
+}
 const mockBankRepository = () => ({
   find: jest.fn().mockResolvedValue([
     {
@@ -57,6 +69,10 @@ describe("BankService", () => {
         {
           provide: getRepositoryToken(Bank),
           useValue: mockBankRepository(),
+        },
+        {
+          provide: DataSource,
+          useFactory: dataSourceMockFactory,
         },
       ],
     }).compile()
