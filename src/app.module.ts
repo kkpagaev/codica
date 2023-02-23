@@ -5,8 +5,10 @@ import { BankModule } from "./bank/bank.module"
 import { Bank } from "./bank/entities/bank.entity"
 import { Transaction } from "./transaction/entities/transaction.entity"
 import { TransactionModule } from "./transaction/transaction.module"
+import { CategoryModule } from "./category/category.module"
+import { Category } from "./category/entities/category.entity"
 
-const entities = [Bank, Transaction]
+const entities = [Bank, Transaction, Category]
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -22,6 +24,7 @@ const entities = [Bank, Transaction]
     }),
     BankModule,
     TransactionModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}
