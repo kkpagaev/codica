@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
-import { AppController } from "./app.controller"
-import { AppService } from "./app.service"
 import { BankModule } from "./bank/bank.module"
 import { Bank } from "./bank/entities/bank.entity"
 
@@ -20,7 +18,5 @@ const entities = [Bank]
     }),
     BankModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
