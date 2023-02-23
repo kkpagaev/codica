@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common"
-import { ConfigModule } from "@nestjs/config"
+import { ConfigModule, ConfigService } from "@nestjs/config"
 import { TypeOrmModule } from "@nestjs/typeorm"
 import { BankModule } from "./bank/bank.module"
 import { Bank } from "./bank/entities/bank.entity"
@@ -11,16 +11,20 @@ import { Category } from "./category/entities/category.entity"
 const entities = [Bank, Transaction, Category]
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: process.env.DB_HOST || "127.0.0.1",
-      port: +process.env.DB_PORT || 7706,
-      username: process.env.DB_USER || "user",
-      password: process.env.DB_PWD || "user",
-      database: process.env.DB_NAME || "db",
-      synchronize: true,
-      entities: entities,
+    ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}` }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: "postgres",
+        host: configService.get("DB_HOST") || "127.0.0.1",
+        port: +configService.get("DB_PORT") || 7706,
+        username: configService.get("DB_USER") || "user",
+        password: configService.get("DB_PWD") || "user",
+        database: configService.get("DB_NAME") || "db",
+        synchronize: true,
+        entities: entities,
+      }),
+      inject: [ConfigService],
     }),
     BankModule,
     TransactionModule,
