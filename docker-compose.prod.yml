@@ -1,0 +1,17 @@
+version: "3.1"
+services:
+  api:
+    build: .
+    ports:
+      - 6767:3000
+    environment:
+      NODE_ENV: prod
+    depends_on:
+      - db
+  db:
+    image: "postgres"
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: user

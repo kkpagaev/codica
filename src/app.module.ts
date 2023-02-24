@@ -11,7 +11,9 @@ import { Category } from "./category/entities/category.entity"
 const entities = [Bank, Transaction, Category]
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}` }),
+    ConfigModule.forRoot({
+      envFilePath: [".env", ".env." + process.env.NODE_ENV],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

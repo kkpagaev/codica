@@ -19,7 +19,7 @@ RUN pnpm install -P
 
 ENV NODE_ENV production
 USER node
-# COPY .env.example .env
+COPY .env.prod .env
 
 COPY --chown=node:node --from=build-stage /build/dist /app/dist/
 CMD ["node", "/app/dist/main"]
