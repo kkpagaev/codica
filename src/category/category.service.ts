@@ -44,4 +44,21 @@ export class CategoryService {
 
     return result
   }
+
+  async statistics(categoryIds: string[], fromPeriod: Date, toPeriod: Date) {
+    const stats = await this.categoryRepository
+      .createQueryBuilder("category")
+      .select("category.name", "name")
+      .addSelect("SUM(transaction.amount)", "amount")
+      .innerJoin("category.transactions", "transaction")
+      .where("transaction.date BETWEEN :fromPeriod AND :toPeriod", {
+        fromPeriod,
+        toPeriod,
+      })
+      .andWhere("category.id IN (:...categoryIds)", { categoryIds })
+      .groupBy("category.name")
+      .getRawMany()
+
+    return stats
+  }
 }

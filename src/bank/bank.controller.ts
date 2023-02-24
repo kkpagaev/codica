@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
-import { ParamUUID } from "src/core/decorators/param-uuid.decorator"
 import { UpdateResult } from "typeorm"
+import { ParamUUID } from "../core/decorators/param-uuid.decorator"
 import { BankService } from "./bank.service"
 import { CreateBankDto } from "./dto/create-bank.dto"
 import { UpdateBankDto } from "./dto/update-bank.dto"

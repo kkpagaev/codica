@@ -1,10 +1,7 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm"
-import {
-  Transaction,
-  TransactionType,
-} from "../transaction/entities/transaction.entity"
+import { Transaction } from "../transaction/entities/transaction.entity"
 import { CreateBankDto } from "./dto/create-bank.dto"
 import { UpdateBankDto } from "./dto/update-bank.dto"
 import { Bank } from "./entities/bank.entity"
@@ -67,12 +64,8 @@ export class BankService {
           await entityManager.save(Transaction, transaction)
         }
 
-        const isConsumable = transaction.type === TransactionType.CONSUMABLE
-        const shouldAdd = isDelete ? !isConsumable : isConsumable
-
         await entityManager.update(Bank, transaction.bankId, {
-          balance: () =>
-            `"balance" ${shouldAdd ? "+" : "-"} ${transaction.amount}`,
+          balance: () => `"balance" + ${transaction.amount}`,
         })
       })
 

@@ -28,7 +28,7 @@ export class CreateTransactionDto {
   bankId: string
 
   @IsArray()
-  @IsUUID("all", { each: true })
+  @IsUUID("4", { each: true })
   @ApiProperty({
     example: ["b0d7b0d0-9d7b-4b6d-8e3d-3dcb9a4f7f63"],
     description: "The ids of the categories",

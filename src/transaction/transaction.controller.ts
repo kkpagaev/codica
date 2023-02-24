@@ -36,8 +36,6 @@ export class TransactionController {
     @Body() dto: CreateTransactionDto,
     @Headers("X-Access-Key") authorizationHeader: string
   ): Promise<void> {
-    console.log(authorizationHeader)
-    console.log(this.config.get("WEBHOOK_SECRET"))
     if (authorizationHeader !== this.config.get("WEBHOOK_SECRET")) {
       this.logger.error("Invalid secret")
       throw new HttpException("Invalid secret", HttpStatus.UNAUTHORIZED)
