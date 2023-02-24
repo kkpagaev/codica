@@ -10,23 +10,38 @@ export class CategoryService {
   constructor(
     @InjectRepository(Category) private categoryRepository: Repository<Category>
   ) {}
-  create(createCategoryDto: CreateCategoryDto) {
-    return "This action adds a new category"
+
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    const category = this.categoryRepository.create(createCategoryDto)
+
+    const result = await this.categoryRepository.save(category)
+
+    return result
   }
 
-  findAll() {
-    return `This action returns all category`
+  async findAll(): Promise<Category[]> {
+    const categories = await this.categoryRepository.find()
+
+    return categories
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`
+  async findOne(id: string): Promise<Category> {
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+    })
+
+    return category
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    const result = await this.categoryRepository.update(id, updateCategoryDto)
+
+    return result
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`
+  async delete(id: string) {
+    const result = await this.categoryRepository.delete(id)
+
+    return result
   }
 }

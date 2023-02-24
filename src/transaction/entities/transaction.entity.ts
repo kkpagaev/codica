@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   ManyToMany,
+  JoinTable,
 } from "typeorm"
 import { Bank } from "../../bank/entities/bank.entity"
 import { Category } from "../../category/entities/category.entity"
@@ -39,5 +40,6 @@ export class Transaction {
   bank: Bank
 
   @ManyToMany(() => Category, (category) => category.transactions)
+  @JoinTable()
   categories: Category[]
 }
