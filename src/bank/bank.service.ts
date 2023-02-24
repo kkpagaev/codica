@@ -61,10 +61,11 @@ export class BankService {
     await this.dataSource
       .transaction(async (entityManager) => {
         await entityManager.save(transaction)
-        const isProfitable = transaction.type === TransactionType.PROFITABLE
         await entityManager.update(Bank, transaction.bankId, {
           balance: () =>
-            `"balance" ${isProfitable ? "+" : "-"} ${transaction.amount}`,
+            `"balance" ${
+              transaction.type === TransactionType.PROFITABLE ? "+" : "-"
+            } ${transaction.amount}`,
         })
       })
       .then(() => {

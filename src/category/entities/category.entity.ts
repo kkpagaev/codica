@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Transaction } from "../../transaction/entities/transaction.entity"
 
 @Entity()
 export class Category {
@@ -10,4 +11,7 @@ export class Category {
 
   @Column()
   description: string
+
+  @ManyToMany(() => Transaction, (transaction) => transaction.categories)
+  transactions: Transaction[]
 }

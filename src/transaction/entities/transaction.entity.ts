@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+} from "typeorm"
 import { Bank } from "../../bank/entities/bank.entity"
+import { Category } from "../../category/entities/category.entity"
 
 export enum TransactionType {
   PROFITABLE = "profitable",
@@ -30,4 +37,7 @@ export class Transaction {
 
   @ManyToOne(() => Bank, (bank) => bank.transactions)
   bank: Bank
+
+  @ManyToMany(() => Category, (category) => category.transactions)
+  categories: Category[]
 }

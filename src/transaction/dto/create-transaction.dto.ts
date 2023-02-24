@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsUUID } from "class-validator"
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsUUID } from "class-validator"
 import { TransactionType } from "../entities/transaction.entity"
 
 export class CreateTransactionDto {
@@ -13,4 +13,8 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsUUID()
   bankId: string
+
+  @IsArray()
+  @IsUUID("all", { each: true })
+  categories: string[]
 }

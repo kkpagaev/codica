@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { BankService } from "../bank/bank.service"
+import { Category } from "../category/entities/category.entity"
 import { CreateTransactionDto } from "./dto/create-transaction.dto"
 import { Transaction } from "./entities/transaction.entity"
 
@@ -29,11 +30,12 @@ export class TransactionService {
     }
   }
 
-  async create({ amount, type, bankId }: CreateTransactionDto) {
+  async create({ amount, type, bankId, categories }: CreateTransactionDto) {
     const transaction = new Transaction()
     transaction.amount = amount
     transaction.type = type
     transaction.bankId = bankId
+    transaction.categories = categories.map((id) => ({ id } as Category))
 
     await this.bankService.processTransaction(transaction)
   }
