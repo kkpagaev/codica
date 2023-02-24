@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { DataSource, Repository, UpdateResult } from "typeorm"
+import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm"
 import {
   Transaction,
   TransactionType,
@@ -46,14 +46,8 @@ export class BankService {
     return result
   }
 
-  async delete(id: string): Promise<Bank> {
-    const deletedBank = await this.bankRepository.findOne({
-      where: { id },
-    })
-
-    await this.bankRepository.delete(id)
-
-    return deletedBank
+  async delete(id: string): Promise<DeleteResult> {
+    return await this.bankRepository.delete(id)
   }
 
   async processTransaction(transaction: Transaction) {

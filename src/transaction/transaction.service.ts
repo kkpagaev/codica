@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from "typeorm"
 import { BankService } from "../bank/bank.service"
 import { Category } from "../category/entities/category.entity"
+import { Pagination } from "../core/reponces/pagination.responce"
 import { CreateTransactionDto } from "./dto/create-transaction.dto"
 import { Transaction } from "./entities/transaction.entity"
 
@@ -14,7 +15,10 @@ export class TransactionService {
     private bankService: BankService
   ) {}
 
-  async paginate(page: number, limit: number) {
+  async paginate(
+    page: number,
+    limit: number
+  ): Promise<Pagination<Transaction>> {
     const [transactions, total] = await this.transactionRepository.findAndCount(
       {
         skip: (page - 1) * limit,
@@ -23,7 +27,7 @@ export class TransactionService {
     )
 
     return {
-      transactions,
+      items: transactions,
       total,
       page,
       limit,
