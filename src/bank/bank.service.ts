@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common"
+import { Injectable, Logger, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { DataSource, DeleteResult, Repository, UpdateResult } from "typeorm"
 import {
@@ -47,26 +47,38 @@ export class BankService {
   }
 
   async delete(id: string): Promise<DeleteResult> {
-    return await this.bankRepository.delete(id)
+    const bank = await this.findOne(id)
+    if (!bank) {
+      throw new NotFoundException()
+    }
+
+    const result = await this.bankRepository.delete(bank)
+    return result
   }
 
-  async processTransaction(transaction: Transaction) {
+  async processTransaction(transaction: Transaction, isDelete = false) {
     this.logger.log(`Processing transaction ${transaction.id}`)
-    await this.dataSource
-      .transaction(async (entityManager) => {
-        await entityManager.save(transaction)
+
+    try {
+      await this.dataSource.transaction(async (entityManager) => {
+        if (isDelete) {
+          await entityManager.delete(Transaction, transaction.id)
+        } else {
+          await entityManager.save(Transaction, transaction)
+        }
+
+        const isConsumable = transaction.type === TransactionType.CONSUMABLE
+        const shouldAdd = isDelete ? !isConsumable : isConsumable
+
         await entityManager.update(Bank, transaction.bankId, {
           balance: () =>
-            `"balance" ${
-              transaction.type === TransactionType.PROFITABLE ? "+" : "-"
-            } ${transaction.amount}`,
+            `"balance" ${shouldAdd ? "+" : "-"} ${transaction.amount}`,
         })
       })
-      .then(() => {
-        this.logger.log(`Transaction ${transaction.id} processed`)
-      })
-      .catch((error) => {
-        this.logger.error(`Transaction ${transaction.id} failed`, error)
-      })
+
+      this.logger.log(`Transaction ${transaction.id} processed`)
+    } catch (e) {
+      this.logger.error(`Transaction ${transaction.id} failed`, e)
+    }
   }
 }

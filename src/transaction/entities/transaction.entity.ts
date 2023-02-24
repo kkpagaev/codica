@@ -17,7 +17,7 @@ export enum TransactionType {
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn("uuid")
-  id: number
+  id: string
 
   @Column()
   amount: number

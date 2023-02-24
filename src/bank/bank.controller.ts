@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
-import { DeleteResult, UpdateResult } from "typeorm"
+import { ParamUUID } from "src/core/decorators/param-uuid.decorator"
+import { UpdateResult } from "typeorm"
 import { BankService } from "./bank.service"
 import { CreateBankDto } from "./dto/create-bank.dto"
 import { UpdateBankDto } from "./dto/update-bank.dto"
@@ -24,14 +25,14 @@ export class BankController {
   }
 
   @Get(":id")
-  async getBank(id: string): Promise<Bank> {
+  async getBank(@ParamUUID() id: string): Promise<Bank> {
     const bank = await this.bankService.findOne(id)
     return bank
   }
 
   @Patch(":id")
   async updateBank(
-    id: string,
+    @ParamUUID() id: string,
     @Body() dto: UpdateBankDto
   ): Promise<UpdateResult> {
     const bank = await this.bankService.update(id, dto)
@@ -39,9 +40,12 @@ export class BankController {
   }
 
   @Delete(":id")
-  async deleteBank(id: string): Promise<DeleteResult> {
-    const bank = await this.bankService.delete(id)
+  async deleteBank(@ParamUUID() id: string) {
+    await this.bankService.delete(id)
 
-    return bank
+    return {
+      message: "Bank deleted successfully",
+      id: id,
+    }
   }
 }

@@ -44,8 +44,19 @@ export class TransactionService {
     await this.bankService.processTransaction(transaction)
   }
 
+  async findOne(id: string): Promise<Transaction> {
+    const transaction = await this.transactionRepository.findOne({
+      where: { id },
+    })
+
+    return transaction
+  }
+
   async delete(id: string) {
-    const result = await this.transactionRepository.delete(id)
+    const transaction = await this.findOne(id)
+
+    const result = await this.bankService.processTransaction(transaction, true)
+
     return result
   }
 }

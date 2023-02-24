@@ -11,8 +11,7 @@ import {
   Query,
 } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
-import { ApiTags } from "@nestjs/swagger"
-import { DeleteResult } from "typeorm"
+import { ApiHeader, ApiTags } from "@nestjs/swagger"
 import { Pagination } from "../core/reponces/pagination.responce"
 import { CreateTransactionDto } from "./dto/create-transaction.dto"
 import { Transaction } from "./entities/transaction.entity"
@@ -29,10 +28,16 @@ export class TransactionController {
   private logger = new Logger(TransactionController.name)
 
   @Post("webhook")
+  @ApiHeader({
+    name: "X-Access-Key",
+    example: "123",
+  })
   async webhook(
     @Body() dto: CreateTransactionDto,
-    @Headers("Authorization") authorizationHeader: string
+    @Headers("X-Access-Key") authorizationHeader: string
   ): Promise<void> {
+    console.log(authorizationHeader)
+    console.log(this.config.get("WEBHOOK_SECRET"))
     if (authorizationHeader !== this.config.get("WEBHOOK_SECRET")) {
       this.logger.error("Invalid secret")
       throw new HttpException("Invalid secret", HttpStatus.UNAUTHORIZED)
@@ -52,9 +57,12 @@ export class TransactionController {
   }
 
   @Delete(":id")
-  async delete(@Query("id") id: string): Promise<DeleteResult> {
-    const result = await this.transactionService.delete(id)
+  async delete(@Query("id") id: string) {
+    await this.transactionService.delete(id)
 
-    return result
+    return {
+      message: "Transaction deleted successfully",
+      id: id,
+    }
   }
 }
