@@ -1,10 +1,12 @@
 import { Body, Controller, Delete, Get, Patch } from "@nestjs/common"
+import { ApiTags } from "@nestjs/swagger"
 import { DeleteResult, UpdateResult } from "typeorm"
 import { BankService } from "./bank.service"
 import { UpdateBankDto } from "./dto/update-bank.dto"
 import { Bank } from "./entities/bank.entity"
 
 @Controller("bank")
+@ApiTags("bank")
 export class BankController {
   constructor(private readonly bankService: BankService) {}
 

@@ -11,6 +11,7 @@ import {
   Query,
 } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
+import { ApiTags } from "@nestjs/swagger"
 import { DeleteResult } from "typeorm"
 import { Pagination } from "../core/reponces/pagination.responce"
 import { CreateTransactionDto } from "./dto/create-transaction.dto"
@@ -18,6 +19,7 @@ import { Transaction } from "./entities/transaction.entity"
 import { TransactionService } from "./transaction.service"
 
 @Controller("transaction")
+@ApiTags("transaction")
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
