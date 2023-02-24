@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Patch } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { DeleteResult, UpdateResult } from "typeorm"
 import { BankService } from "./bank.service"
+import { CreateBankDto } from "./dto/create-bank.dto"
 import { UpdateBankDto } from "./dto/update-bank.dto"
 import { Bank } from "./entities/bank.entity"
 
@@ -14,6 +15,12 @@ export class BankController {
   async getBanks(): Promise<Bank[]> {
     const banks = await this.bankService.findAll()
     return banks
+  }
+
+  @Post()
+  async createBank(@Body() dto: CreateBankDto): Promise<Bank> {
+    const bank = await this.bankService.create(dto)
+    return bank
   }
 
   @Get(":id")
