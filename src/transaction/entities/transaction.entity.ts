@@ -25,7 +25,7 @@ export class Transaction {
   @Column({
     default: () => "CURRENT_TIMESTAMP",
   })
-  date: Date
+  createdAt: Date
 
   @Column({
     type: "enum",

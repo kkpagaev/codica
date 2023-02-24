@@ -9,13 +9,13 @@ import {
   Logger,
   Post,
   Query,
+  Res,
 } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import { ApiHeader, ApiTags } from "@nestjs/swagger"
-import { Pagination } from "../core/reponces/pagination.responce"
 import { CreateTransactionDto } from "./dto/create-transaction.dto"
-import { Transaction } from "./entities/transaction.entity"
 import { TransactionService } from "./transaction.service"
+import { Response } from "express"
 
 @Controller("transaction")
 @ApiTags("transaction")
@@ -44,14 +44,15 @@ export class TransactionController {
     await this.transactionService.create(dto)
   }
 
-  @Get()
+  @Get("/")
   async paginate(
     @Query("page") page: number,
-    @Query("limit") limit: number
-  ): Promise<Pagination<Transaction>> {
+    @Query("limit") limit: number,
+    @Res() res: Response
+  ) {
     const result = await this.transactionService.paginate(page, limit)
 
-    return result
+    return res.json(result).status(200)
   }
 
   @Delete(":id")

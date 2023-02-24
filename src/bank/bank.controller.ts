@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Post, Put } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { UpdateResult } from "typeorm"
 import { ParamUUID } from "../core/decorators/param-uuid.decorator"
@@ -30,7 +30,7 @@ export class BankController {
     return bank
   }
 
-  @Patch(":id")
+  @Put(":id")
   async updateBank(
     @ParamUUID() id: string,
     @Body() dto: UpdateBankDto

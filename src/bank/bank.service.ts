@@ -63,9 +63,9 @@ export class BankService {
         } else {
           await entityManager.save(Transaction, transaction)
         }
-
+        const amount = isDelete ? -transaction.amount : transaction.amount
         await entityManager.update(Bank, transaction.bankId, {
-          balance: () => `"balance" + ${transaction.amount}`,
+          balance: () => `"balance" ${amount > 0 ? "+" : ""} ${amount}`,
         })
       })
 

@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Delete,
   Query,
   UsePipes,
   ValidationPipe,
+  Put,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { ParamUUID } from "../core/decorators/param-uuid.decorator"
@@ -54,7 +54,7 @@ export class CategoryController {
     return this.categoryService.findOne(id)
   }
 
-  @Patch(":id")
+  @Put(":id")
   update(
     @ParamUUID() id: string,
     @Body() updateCategoryDto: UpdateCategoryDto
